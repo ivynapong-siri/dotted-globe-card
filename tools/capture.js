@@ -18,7 +18,20 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 
-const CHROME = 'C:/Program Files/Google/Chrome/Application/chrome.exe';
+/* CHROME=/path/to/chrome overrides; the defaults cover the usual places on
+   each platform, because a hard-coded path to one person's machine is no use
+   to anyone who clones this */
+const CHROME =
+  process.env.CHROME ||
+  [
+    'C:/Program Files/Google/Chrome/Application/chrome.exe',
+    'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe',
+    '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+    '/usr/bin/google-chrome',
+    '/usr/bin/chromium',
+  ].find(function (p) {
+    return fs.existsSync(p);
+  });
 const PORT = 9333;
 const [, , URL, OUT, WS, HS] = process.argv;
 const W = +(WS || 1000);
