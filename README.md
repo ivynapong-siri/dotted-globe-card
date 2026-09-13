@@ -1,5 +1,10 @@
 # Terra Index
 
+**[dotted-globe-card.vercel.app](https://dotted-globe-card.vercel.app)** —
+and a comparison is a link: [Brazil, Argentina and Peru](https://dotted-globe-card.vercel.app/?pin=Brazil,Argentina,Peru).
+
+[![Three countries lit out of a grey dotted globe, with their areas as bars](og.png)](https://dotted-globe-card.vercel.app)
+
 A plate of every country on Earth, drawn in ink. The map is grey, the
 interface is grey, the type is black — so the **only colour on the page is the
 country under your pointer**, which leaves the map and takes the colour of the
