@@ -150,6 +150,23 @@
     pinCountries(pins);
     paintPins();
     drawCompare();
+    syncUrl();
+  }
+
+  /**
+   * Keep the address bar showing what is on screen.
+   *
+   * `?pin=` could already open a comparison; this is the other half of it —
+   * without this you can follow a shared link but you cannot produce one
+   * except by typing it, which nobody will do. Pin three countries and the
+   * URL is now the thing to send.
+   *
+   * replaceState, not pushState: pinning is not navigation, and five toggles
+   * should not cost five presses of the back button to undo.
+   */
+  function syncUrl() {
+    var q = pins.length ? '?pin=' + pins.map(encodeURIComponent).join(',') : '';
+    history.replaceState(null, '', location.pathname + q);
   }
 
   function paintPins() {
@@ -352,6 +369,7 @@
       pinCountries(pins);
       paintPins();
       drawCompare();
+      syncUrl();
     });
 
   /* A comparison is worth sending to someone, and "open this and then click
