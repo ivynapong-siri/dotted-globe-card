@@ -3,7 +3,7 @@
 **[dotted-globe-card.vercel.app](https://dotted-globe-card.vercel.app)** —
 and a comparison is a link: [Brazil, Argentina and Peru](https://dotted-globe-card.vercel.app/?pin=Brazil,Argentina,Peru).
 
-[![Three countries lit out of a grey dotted globe, with their areas as bars](og.png)](https://dotted-globe-card.vercel.app)
+[![Pinning Brazil, Argentina and Peru on the globe and comparing their areas](demo.gif)](https://dotted-globe-card.vercel.app)
 
 A plate of every country on Earth, drawn in ink. The map is grey, the
 interface is grey, the type is black — so the **only colour on the page is the
@@ -43,6 +43,15 @@ not ES modules, precisely so `file://` works too.
 Names are matched exactly as they appear in the list, up to five, and anything
 unrecognised is ignored rather than treated as an error.
 
+The animation above is the same thing filmed: Chrome driven over the devtools
+protocol, clicked, and photographed frame by frame, because `--screenshot`
+takes one picture per process launch and an interaction needs a browser that
+stays open. Capture is not evenly paced — a frame costs whatever eighteen
+thousand dots cost to render in software — so each frame's real timestamp
+becomes its duration in an ffmpeg concat list, and the GIF plays back at the
+speed the thing actually happened rather than at the capture loop's average.
+`tools/capture.js` does it.
+
 The social preview image is a screenshot of exactly that — the point of the
 picture is the idea, and the idea is countries lit out of a grey planet with
 their areas underneath. To retake it with headless Chrome against a local
@@ -71,6 +80,7 @@ about where both ends are satisfied.
 | `world-data.js` | generated — 206 rings, 18,538 land cells, 234 countries |
 | `vendor/motion.min.js` | Motion 11.18.2, vendored (65 KB) |
 | `tools/build-world.js` | regenerates `world-data.js` from Natural Earth |
+| `tools/capture.js` | drives Chrome over CDP and films the demo above |
 
 ## How exact are the borders?
 
