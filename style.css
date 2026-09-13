@@ -430,6 +430,83 @@ body {
     width: min(150%, 560px);
     height: 380px;
   }
+
+  /**
+   * Reading order on a phone: the title, the globe, then the list.
+   *
+   * Stacked, the globe landed at the bottom of a page twice the height of
+   * the screen — so tapping a country in the list lit something the reader
+   * could not see. On a desktop the globe is beside the list and the whole
+   * interaction is one glance; on a phone that only holds if the globe comes
+   * first. The title stays at the top because it is still the way in.
+   *
+   * `display: contents` is what makes this possible without touching the
+   * markup. The globe is a sibling of the grid, not of the headline, so no
+   * amount of `order` inside the grid can interleave them. Dropping the two
+   * wrapper boxes promotes their children into .plate's own flex column,
+   * where all four can be ordered against each other. The wrappers keep
+   * inheriting normally — pointer-events included — because an element with
+   * `display: contents` still exists, it just stops drawing a box.
+   */
+  .plate-grid,
+  .plate-say {
+    display: contents;
+  }
+  .plate-head {
+    order: 1;
+  }
+  .footer-globe {
+    order: 2;
+  }
+  .plate-cols {
+    order: 3;
+  }
+  .compare {
+    order: 4;
+  }
+}
+
+/**
+ * ── thumbs ──────────────────────────────────────────────────
+ *
+ * `pointer: coarse` is the phone and the tablet and nothing else: a mouse
+ * stays fine-grained, so none of this reaches the desktop design, which is
+ * the point. A 13px row with 5px of padding is a comfortable 30px target
+ * for a cursor and an uncomfortable one for a thumb — Apple asks for 44pt,
+ * Material for 48dp, and this page was asking people to hit 14.
+ *
+ * The rows simply grow. The two small controls do not: `Clear` and the `×`
+ * that drops a country are sized by the type around them, and growing the
+ * box would move everything next to them. Instead each gets an invisible
+ * pseudo-element reaching out past its edges — the target grows, nothing
+ * moves. The × matters most: it is 16px, it sits beside a name, and a miss
+ * deletes the country the reader just chose.
+ */
+@media (pointer: coarse) {
+  .country-row,
+  .legend-row {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    /* padding alone lands a pixel short once a row's rule is counted in, and
+       "nearly 44" is not a number either guideline offers */
+    min-height: 44px;
+    box-sizing: border-box;
+  }
+  .col--index input {
+    min-height: 44px;
+  }
+  .compare-clear,
+  .compare-drop {
+    position: relative;
+  }
+  .compare-clear::after,
+  .compare-drop::after {
+    content: "";
+    position: absolute;
+    /* 15 each side takes the shorter of the two — Clear, at 14px — to 44
+       exactly; the x, at 16, lands a little over, which costs nothing */
+    inset: -15px;
+  }
 }
 @media (max-width: 640px) {
   .plate {
