@@ -43,9 +43,10 @@ not ES modules, precisely so `file://` works too.
 Names are matched exactly as they appear in the list, up to five, and anything
 unrecognised is ignored rather than treated as an error.
 
-The social preview image is a screenshot of exactly that, taken with headless
-Chrome against a local server — the point of the picture is the idea, and the
-idea is three countries lit out of a grey planet with their areas underneath:
+The social preview image is a screenshot of exactly that — the point of the
+picture is the idea, and the idea is countries lit out of a grey planet with
+their areas underneath. To retake it with headless Chrome against a local
+server:
 
 ```bash
 chrome --headless=new --disable-gpu --hide-scrollbars   --window-size=1600,840 --virtual-time-budget=4500 --screenshot=og.png   "http://localhost:3000/?pin=Brazil,Argentina,Peru"
