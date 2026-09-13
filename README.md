@@ -27,6 +27,32 @@ python -m http.server 3000
 Or just open `index.html` in a browser. The scripts are plain `<script>` tags,
 not ES modules, precisely so `file://` works too.
 
+## Sharing a view
+
+`?pin=` opens with countries already lit, so a comparison is a link:
+
+```
+/?pin=Brazil,Argentina,Peru
+```
+
+Names are matched exactly as they appear in the list, up to five, and anything
+unrecognised is ignored rather than treated as an error.
+
+The social preview image is a screenshot of exactly that, taken with headless
+Chrome against a local server — the point of the picture is the idea, and the
+idea is three countries lit out of a grey planet with their areas underneath:
+
+```bash
+chrome --headless=new --disable-gpu --hide-scrollbars   --window-size=1600,840 --virtual-time-budget=4500 --screenshot=og.png   "http://localhost:3000/?pin=Brazil,Argentina,Peru"
+```
+
+The virtual time budget matters twice over. Too little and the shot lands
+mid-entrance with the headline still masked, or mid-flight with the camera
+between where it was and the countries asked for. Too much and every extra
+second is another sixty frames of eighteen thousand dots rendered in software:
+at 2× scale a twelve-second budget took over two minutes. 4.5 seconds at 1× is
+about where both ends are satisfied.
+
 ## The files
 
 | file | what it is |

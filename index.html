@@ -9,6 +9,42 @@
       content="Every country on Earth, drawn in ink. The only colour on the page is the country under your pointer."
     />
     <meta name="color-scheme" content="light" />
+
+    <!--
+      The social preview. `og.png` is a real screenshot of this page with
+      ?pin=Brazil,Argentina,Peru open, because the one thing a static preview
+      has to carry is the idea: three countries lit out of a grey planet, and
+      their areas as bars underneath. Absolute URLs — a relative og:image is
+      resolved inconsistently, and by the crawler that gets it wrong it is
+      simply dropped. Regenerate with `npm run og`.
+    -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://dotted-globe-card.vercel.app/" />
+    <meta property="og:title" content="Terra Index — every country on Earth, in dots" />
+    <meta
+      property="og:description"
+      content="All 234 countries drawn from real borders on a canvas globe. Pin any of them to compare how big they actually are. No framework, no build step."
+    />
+    <meta property="og:image" content="https://dotted-globe-card.vercel.app/og.png" />
+    <meta property="og:image:width" content="1600" />
+    <meta property="og:image:height" content="840" />
+    <meta
+      property="og:image:alt"
+      content="A dotted globe with Brazil, Argentina and Peru lit in green, and a bar chart of their areas."
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Terra Index — every country on Earth, in dots" />
+    <meta
+      name="twitter:description"
+      content="All 234 countries drawn from real borders on a canvas globe. Pin any of them to compare how big they actually are."
+    />
+    <meta name="twitter:image" content="https://dotted-globe-card.vercel.app/og.png" />
+
+    <!-- the page draws everything else itself; this is the one mark it needs -->
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%23111'/%3E%3Cpath d='M2 16h28M6.5 8.5h19M6.5 23.5h19' stroke='%23fff' stroke-width='1.7' fill='none'/%3E%3C/svg%3E"
+    />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
