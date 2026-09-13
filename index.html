@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Terra Index</title>
+    <meta
+      name="description"
+      content="Every country on Earth, drawn in ink. The only colour on the page is the country under your pointer."
+    />
+    <meta name="color-scheme" content="light" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="stage">
+      <section class="plate">
+        <div class="plate-grid">
+          <div class="plate-say">
+            <header class="plate-head">
+              <!--
+                Each .line is a mask and the span inside it is what the
+                entrance moves. The second line rolls: .roller is what the
+                entrance moves, .roller-track is what the cycle moves, and
+                they are two elements on purpose — one `transform` cannot be
+                written by two animations at once.
+              -->
+              <h1 class="plate-title">
+                <span class="line"><span>Every country</span></span>
+                <span class="line">
+                  <span class="roller">
+                    <span class="roller-track" data-roller>
+                      <em>in dots</em>
+                      <em>in ink</em>
+                      <em>in order</em>
+                      <em>on one sphere</em>
+                    </span>
+                  </span>
+                </span>
+              </h1>
+            </header>
+
+            <hr class="rule rule--heavy" />
+
+            <div class="plate-cols">
+              <!-- data-country on a row is the whole wiring: pointing at one
+                   turns the globe to it and blooms its dots into the colour of
+                   the ground it stands on -->
+              <section class="col col--index" data-country-list>
+                <h2>
+                  <span class="num">01</span> Index
+                  <span class="country-count" data-count></span>
+                </h2>
+                <input
+                  type="search"
+                  placeholder="Filter by country, continent or code"
+                  aria-label="Filter countries"
+                  autocomplete="off"
+                  spellcheck="false"
+                />
+                <ul role="list"></ul>
+              </section>
+
+              <nav class="col col--nav" aria-label="Continents">
+                <h2><span class="num">02</span> Continents</h2>
+                <div class="legend" data-legend></div>
+              </nav>
+            </div>
+
+            <!-- The reason clicking pins. Below the columns and not beside
+                 them, because bars are read against each other and need the
+                 full width to be worth drawing. -->
+            <section class="compare" data-compare hidden>
+              <h2>
+                <span class="num">03</span> Compare
+                <button type="button" class="compare-clear" data-compare-clear>
+                  Clear
+                </button>
+              </h2>
+              <ul class="compare-list" data-compare-list role="list"></ul>
+            </section>
+          </div>
+        </div>
+
+        <!-- anchored off the bottom-right corner and cropped by the plate -->
+        <div class="footer-globe">
+          <canvas
+            id="globe"
+            role="img"
+            aria-label="A globe of every country on Earth, in dots. Drag to turn it."
+          ></canvas>
+        </div>
+      </section>
+    </main>
+
+    <script src="vendor/motion.min.js"></script>
+    <script src="world-data.js"></script>
+    <script src="globe.js"></script>
+    <script>
+      addEventListener("load", function () {
+        /* mono: the terrain is drawn in greys, and a country blooms into its
+           own terrain colour while it is pointed at */
+        mountGlobe(document.getElementById("globe"), {
+          palette: "mono",
+          cropTo: ".plate",
+        });
+
+        var box = document.querySelector("[data-country-list] input");
+        GLOBE_CONTINENTS.forEach(function (name) {
+          var b = document.createElement("button");
+          b.type = "button";
+          b.className = "legend-row";
+          b.textContent = name;
+          b.addEventListener("click", function () {
+            box.value = box.value === name ? "" : name;
+            box.dispatchEvent(new Event("input"));
+            box.focus();
+          });
+          document.querySelector("[data-legend]").appendChild(b);
+        });
+      });
+    </script>
+    <script src="country-list.js"></script>
+    <script src="text-anim.js"></script>
+  </body>
+</html>

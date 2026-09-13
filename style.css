@@ -1,0 +1,603 @@
+/* ══════════════════════════════════════════════════════════════
+   TERRA INDEX — the plate
+   ══════════════════════════════════════════════════════════════
+
+   A printed reference plate: ink on paper, hairline rules, numbered
+   sections, and a grid you can see. Everything a screen would normally use to
+   separate things — fill, shadow, radius, colour — is spent on nothing here,
+   because the page has exactly one colour and it is not allowed to be in the
+   furniture.
+
+   THE ONE RULE: colour appears only under the pointer. That is what the whole
+   design is arranged around. The map is greys, the interface is greys, the
+   type is black — so when a country blooms into green, yellow or blue it is
+   the only chromatic thing on screen and needs no arrow, no glow and no
+   border to be found.
+
+   Which puts two obligations on the page that a colourful design would not
+   have. First the tonal range has to do all the hierarchy, so the greys are a
+   real scale with gaps you can name, not five shades of almost-the-same.
+   Second the page has to TEACH the colour, because a key that only appears on
+   hover teaches nobody — hence section 03, which is a legend for something
+   that is not on screen yet.
+   ────────────────────────────────────────────────────────────── */
+
+:root {
+  --ground: #e6e6e6;
+  --paper: #ffffff;
+  --ink: #000000;
+  /* a scale with gaps you can name, not five shades of the same */
+  --ink-80: #2b2b2b;
+  --ink-60: #565656;
+  --ink-40: #8c8c8c;
+  --ink-20: #c9c9c9;
+  --rule: #dcdcdc;
+  --rule-ink: #000000;
+
+  --maxw: 1640px;
+  --pad: clamp(16px, 2.2vw, 24px);
+
+  /* One family for everything. Noto Sans carries Thai as well as Latin, which
+     a display serif would not, so the plate can be set in another script
+     without the headline falling back to something else entirely. With only
+     one typeface left, weight and size have to do the whole hierarchy — 300
+     at 108px against 700 at 10px, and nothing in between hedging. */
+  --font: "Noto Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+html {
+  background: var(--ground);
+}
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+::selection {
+  background: var(--ink);
+  color: var(--paper);
+}
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+/* ── the ground ─────────────────────────────────────────────
+   The same shape as the colour edition: a panel sitting on a flat field,
+   with the globe hung off its bottom-right corner and cropped by it. Grey
+   ground, white paper — which is also the only "colour" decision this page is
+   allowed to make. */
+.stage {
+  position: relative;
+  overflow: hidden;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 48px var(--pad);
+  background: var(--ground);
+}
+
+/* ── the panel ──────────────────────────────────────────────── */
+.plate {
+  position: relative;
+  max-width: calc(var(--maxw) - 2 * var(--pad));
+  margin: 0 auto;
+  width: 100%;
+  background: var(--paper);
+  border-radius: 0;
+  padding: 40px clamp(24px, 3.6vw, 56px) 34px;
+  overflow: hidden;
+  min-height: 420px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Seven columns of words, five of air — the globe lives in the air, anchored
+   to the panel rather than to a grid cell, so it can hang off the corner. */
+.plate-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  position: relative;
+  z-index: 1;
+  /* the row would otherwise lay an invisible sheet over the globe and swallow
+     every pointerdown; only the words catch the pointer */
+  pointer-events: none;
+}
+.plate-say {
+  pointer-events: auto;
+  grid-column: span 7;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+/* ── rules ──────────────────────────────────────────────────
+   A hairline and a heavy line, and nothing between them. Two weights is a
+   hierarchy; four is a mess with no meaning attached to any of them. */
+.rule {
+  border: 0;
+  border-top: 1px solid var(--rule);
+  margin: 0;
+  height: 0;
+  transform-origin: left center;
+}
+.rule--heavy {
+  border-top: 2px solid var(--rule-ink);
+  margin: 24px 0 22px;
+}
+
+/* ── masthead ───────────────────────────────────────────────── */
+.plate-head {
+  max-width: 100%;
+}
+.plate-title {
+  margin: 0;
+  font-family: var(--font);
+  font-weight: 300;
+  font-size: clamp(40px, 5.2vw, 76px);
+  line-height: 0.95;
+  /* a grotesk at this size needs pulling in harder than a serif did; 300
+     weight keeps it from turning into a banner */
+  letter-spacing: -0.045em;
+  display: flex;
+  flex-direction: column;
+}
+/* Each line is a mask; the span inside it is what the animation moves.
+   The padding is the whole reason this works: a mask clipped to the line box
+   cuts the ascenders off a 300-weight serif — the T and the d lost their tops
+   — and the descender of the italic goes the same way at the bottom. Padding
+   opens the box, the negative margin puts the type back where it was, and the
+   mask still starts and ends exactly on the type. */
+.plate-title .line {
+  display: block;
+  overflow: hidden;
+  padding: 0.14em 0.06em 0.02em 0;
+  margin-top: -0.14em;
+}
+.plate-title em {
+  font-style: italic;
+  font-weight: 300;
+  /* the indent is the only "layout" gesture on the page, and it earns its
+     place by making a two-line title read as one set phrase rather than as
+     two stacked words */
+  margin-left: 0.42em;
+}
+
+/* ── the roller ─────────────────────────────────────────────
+   A second mask inside the first. The outer .line is the entrance's; this is
+   the cycle's, and the two never touch the same element's transform.
+
+   The item box is TALLER than the type it holds — 1.2em of leading around a
+   1em glyph — because the descender on "sphere" would otherwise be clipped by
+   a mask cut exactly to the line. Every item is the same height, so the step
+   the track travels is just that height, measured once from the first item
+   rather than hard-coded: the title size is a clamp, so there is no number to
+   hard-code. */
+.roller {
+  display: block;
+  overflow: hidden;
+  height: 1.2em;
+}
+.roller-track {
+  display: block;
+}
+.roller-track em {
+  display: flex;
+  align-items: center;
+  height: 1.2em;
+  margin-left: 0.42em;
+  white-space: nowrap;
+}
+
+/* ── the working area ───────────────────────────────────────
+   Two tracks inside the seven columns, not three: the index needs room for a
+   country name and a continent on one line, and the other two blocks are
+   short enough to stack in the space that leaves. */
+.plate-cols {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  gap: 24px clamp(28px, 3.2vw, 56px);
+  width: 100%;
+  max-width: 640px;
+  align-items: start;
+}
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  min-width: 0;
+}
+.col h2 {
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding-bottom: 9px;
+  border-bottom: 1px solid var(--ink);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+/* With one family, the number is told from the label beside it by weight and
+   tracking rather than by being a different typeface: light, untracked and
+   grey against bold, wide and black. */
+.num {
+  font-size: 12px;
+  font-weight: 300;
+  letter-spacing: 0;
+  color: var(--ink-40);
+}
+
+/* ── the index ──────────────────────────────────────────────── */
+/* A search input arrives wearing the operating system's clothes: a rounded
+   pill on macOS, a blue focus ring, and a blue circled x to clear it. None of
+   that belongs on a page with no colour and no curves in it, and none of it
+   goes away by setting a background — it has to be taken off by name. */
+.col--index input {
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 9px 0;
+  border: 0;
+  border-bottom: 1px solid var(--ink-20);
+  border-radius: 0;
+  background: transparent;
+  color: var(--ink);
+  width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  outline-offset: 3px;
+  transition: border-color 0.15s linear;
+}
+/* the blue circled x, in every engine that draws one */
+.col--index input::-webkit-search-cancel-button,
+.col--index input::-webkit-search-decoration,
+.col--index input::-webkit-search-results-button {
+  -webkit-appearance: none;
+  display: none;
+}
+.col--index input::-ms-clear {
+  display: none;
+}
+.col--index input::placeholder {
+  color: var(--ink-40);
+}
+.col--index input:focus {
+  outline: none;
+  border-bottom-color: var(--ink);
+}
+.col--index input:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+.col--index ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 172px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--ink-20) transparent;
+}
+.col--index ul::-webkit-scrollbar {
+  width: 7px;
+}
+.col--index ul::-webkit-scrollbar-thumb {
+  background: var(--ink-20);
+}
+.col--index li + li .country-row {
+  border-top: 1px solid var(--rule);
+}
+.country-row {
+  /* it is a <button>, so the first job is to take the button off it */
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 5px 8px 5px 0;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-60);
+  transition: color 0.12s linear, background 0.12s linear, padding-left 0.12s linear;
+}
+/* Ink, inverted. The only "highlight colour" this interface is allowed is
+   black, so a selected row is black paper with white type on it. */
+.country-row:hover,
+.country-row:focus-visible {
+  color: var(--paper);
+  background: var(--ink);
+  padding-left: 8px;
+  outline: none;
+}
+.country-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.country-row small {
+  margin-left: auto;
+  padding-left: 10px;
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--ink-40);
+}
+.country-row:hover small,
+.country-row:focus-visible small {
+  color: var(--paper);
+  opacity: 0.66;
+}
+.col--index ul:hover .country-row:not(:hover) {
+  opacity: 0.42;
+}
+
+/* ── the continent filter ───────────────────────────────────── */
+.legend {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+.legend-row {
+  padding: 5px 0;
+  border: 0;
+  border-bottom: 1px solid var(--rule);
+  border-radius: 0;
+  background: transparent;
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 500;
+  text-align: left;
+  color: var(--ink-60);
+  cursor: pointer;
+  transition: color 0.12s linear, padding-left 0.12s linear;
+}
+.legend-row:hover,
+.legend-row:focus-visible {
+  color: var(--ink);
+  padding-left: 8px;
+  outline: none;
+}
+
+/* ── the globe ──────────────────────────────────────────────
+   Hung off the bottom-right and cropped by the plate, so it reads as part of
+   something larger rather than as an illustration placed in a box. */
+.footer-globe {
+  position: absolute;
+  right: -316px;
+  bottom: -220px;
+  z-index: 0;
+  width: 1240px;
+  /* what the script reads for the graticule, the limb and the label */
+  color: #6f6f6f;
+}
+.footer-globe canvas {
+  width: 1240px;
+  height: 820px;
+  cursor: grab;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.footer-globe canvas.is-turning {
+  cursor: grabbing;
+}
+
+/* ── narrow ─────────────────────────────────────────────────
+   The panel stacks and the globe stops hanging off the corner, because below
+   this width there is no corner left to hang off. */
+@media (max-width: 900px) {
+  .plate-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .plate-say {
+    grid-column: auto;
+  }
+  .footer-globe {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    width: 100%;
+    margin: 28px -24px -40px;
+    min-height: 240px;
+  }
+  .footer-globe canvas {
+    width: min(150%, 560px);
+    height: 380px;
+  }
+}
+@media (max-width: 640px) {
+  .plate {
+    padding: 32px 20px 28px;
+  }
+  .plate-cols {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ══ the entrance ══════════════════════════════════════════════
+   Hidden from the FIRST painted frame, by the stylesheet. Set this from the
+   script instead and there is one frame where the page is laid out and fully
+   visible before it is hidden again. The class comes off when the sequence
+   finishes — or on a failsafe — so a page whose script never runs is simply
+   already there, which is also the whole reduced-motion path. */
+.is-animating .plate-title .line > * {
+  transform: translateY(108%);
+}
+.is-animating .col > *,
+.is-animating .rule {
+  transform: scaleX(0);
+}
+
+/* ── a pinned row ───────────────────────────────────────────
+   Hovering answers "what is this"; clicking holds it so a second one can be
+   held beside it. The held state has to survive the pointer leaving, so it
+   cannot look like the hover — hover inverts the row, a pin marks its edge
+   and keeps the name black. */
+.country-row {
+  position: relative;
+  cursor: pointer;
+}
+.country-row.is-pinned {
+  color: var(--ink);
+  font-weight: 600;
+}
+.country-row.is-pinned::before {
+  content: "";
+  position: absolute;
+  left: -8px;
+  top: 50%;
+  width: 3px;
+  height: 13px;
+  margin-top: -6.5px;
+  background: var(--ink);
+}
+.country-row.is-pinned:hover::before,
+.country-row.is-pinned:focus-visible::before {
+  background: var(--paper);
+}
+
+/* ── the comparison ─────────────────────────────────────────
+   Bars against the largest of the set. The question is which is bigger and by
+   how much, and five numbers in a column answer that far more slowly than
+   five bars do. */
+.compare {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 26px;
+  max-width: 640px;
+}
+.compare[hidden] {
+  display: none;
+}
+.compare h2 {
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding-bottom: 9px;
+  border-bottom: 1px solid var(--ink);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.compare-clear {
+  margin-left: auto;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  cursor: pointer;
+  transition: color 0.15s linear;
+}
+.compare-clear:hover {
+  color: var(--ink);
+}
+.compare-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+.compare-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--rule);
+  font-size: 13px;
+}
+.compare-drop {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  font: inherit;
+  font-size: 14px;
+  line-height: 1;
+  color: var(--ink-40);
+  cursor: pointer;
+  transition: color 0.15s linear;
+}
+.compare-drop:hover {
+  color: var(--ink);
+}
+.compare-name {
+  flex: none;
+  width: 32%;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 600;
+}
+/* the bar is a solid black rule on a hairline track — the same two weights
+   the rest of the plate is built from, doing one more job */
+.compare-bar {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 8px;
+  border-bottom: 1px solid var(--rule);
+  display: flex;
+  align-items: flex-end;
+}
+.compare-bar i {
+  display: block;
+  height: 8px;
+  background: var(--ink);
+  transition: width 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.compare-num {
+  flex: none;
+  width: 92px;
+  text-align: right;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--ink-60);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 640px) {
+  .compare-name {
+    width: 40%;
+  }
+  .compare-num {
+    width: 74px;
+  }
+}

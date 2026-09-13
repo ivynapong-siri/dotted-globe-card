@@ -1,0 +1,19 @@
+{
+  "name": "every-country-in-dots",
+  "version": "1.0.0",
+  "description": "Every country on Earth as a draggable canvas globe, placed by real Natural Earth borders and coloured by climate zone. No framework, no build step.",
+  "scripts": {
+    "start": "npx --yes serve -l 3000 ."
+  },
+  "keywords": [
+    "canvas",
+    "globe",
+    "dataviz",
+    "natural-earth",
+    "countries",
+    "vanilla-js",
+    "no-build",
+    "motion-one"
+  ],
+  "license": "MIT"
+}
